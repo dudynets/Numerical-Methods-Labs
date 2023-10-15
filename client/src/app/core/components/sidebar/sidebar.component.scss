@@ -1,0 +1,27 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-width: 300px;
+
+  mat-toolbar {
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  mat-action-list {
+    padding: 0;
+
+    mat-list-item {
+      border-bottom: 1px solid #e0e0e0;
+
+      mat-icon {
+        margin: 16px;
+        align-self: center;
+      }
+
+      [matlistitemtitle] {
+        font-weight: 500;
+      }
+    }
+  }
+}

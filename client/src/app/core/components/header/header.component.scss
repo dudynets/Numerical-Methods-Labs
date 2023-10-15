@@ -1,0 +1,13 @@
+.header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+  &__title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  &__spacer {
+    flex: 1 1 auto;
+  }
+}

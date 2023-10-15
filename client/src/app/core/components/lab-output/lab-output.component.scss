@@ -1,0 +1,20 @@
+.lab-output {
+  &__header {
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__error {
+    pre {
+      overflow-y: auto;
+    }
+  }
+}

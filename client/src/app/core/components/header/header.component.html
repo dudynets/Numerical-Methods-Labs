@@ -1,0 +1,37 @@
+<mat-toolbar
+  class="header"
+  color="primary"
+>
+  <button
+    (click)="toggleSidebar()"
+    class="header__button"
+    mat-icon-button
+    matTooltip="Toggle drawer"
+  >
+    <mat-icon class="header__button-icon">menu</mat-icon>
+  </button>
+
+  <span class="header__title">Numerical Methods Labs</span>
+
+  <span class="header__spacer"></span>
+
+  <ng-container *ngIf="(isSidebarOpened$ | async) === false">
+    <button
+      [routerLink]="['/settings']"
+      class="header__button"
+      mat-icon-button
+      matTooltip="Settings"
+    >
+      <mat-icon class="header__button-icon">settings</mat-icon>
+    </button>
+
+    <button
+      [routerLink]="['/about']"
+      class="header__button"
+      mat-icon-button
+      matTooltip="About"
+    >
+      <mat-icon class="header__button-icon">info</mat-icon>
+    </button>
+  </ng-container>
+</mat-toolbar>

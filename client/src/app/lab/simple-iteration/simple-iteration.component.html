@@ -1,0 +1,111 @@
+<div class="lab-item">
+  <div class="lab-item__input">
+    <h2 class="lab-item__input-title">
+      <mat-icon>functions</mat-icon>
+      Input
+    </h2>
+    <form
+      [formGroup]="inputForm"
+      class="lab-item__input-form"
+    >
+      <mat-form-field
+        matTooltip="Supported operators: x, +, -, *, /, ^, sin, cos, tan, log, ln, sqrt, abs, E, pi, (, ), ."
+        matTooltipPosition="above"
+      >
+        <mat-label>Function f(x)</mat-label>
+        <input
+          formControlName="f_string"
+          matInput
+          type="text"
+        />
+        <mat-error *ngIf="fString.hasError('required')">This field is required.</mat-error>
+        <mat-error *ngIf="fString.hasError('invalidExpression')">Invalid expression.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>x<sub>0</sub> (Initial guess)</mat-label>
+        <input
+          formControlName="x0"
+          matInput
+          type="number"
+        />
+        <mat-error *ngIf="x0.hasError('required')">This field is required.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Tolerance</mat-label>
+        <input
+          formControlName="tol"
+          matInput
+          type="number"
+        />
+        <mat-error *ngIf="tol.hasError('greaterThan')">Tolerance must be greater than 0.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Maximum number of iterations</mat-label>
+        <input
+          formControlName="max_iter"
+          matInput
+          type="number"
+        />
+        <mat-error *ngIf="maxIter.hasError('min')">Minimum value is {{ maxIter.errors?.['min']['min'] }}.</mat-error>
+      </mat-form-field>
+    </form>
+
+    <button
+      (click)="submit()"
+      [disabled]="inputForm.invalid || (canRunTask$ | async) === false"
+      class="lab-item__input-submit"
+      color="primary"
+      mat-flat-button
+    >
+      Calculate
+    </button>
+  </div>
+
+  <mat-divider />
+
+  <div class="lab-item__output">
+    <ng-container
+      *ngIf="(serverTaskState$ | async) !== ServerTaskState.Calculating; else calculationInProgressTemplate"
+    >
+      <ng-container *ngIf="(labSnapshot$ | async)?.output as labSnapshotOutput; else noOutputTemplate">
+        <nml-lab-output [error]="labSnapshotOutput.error">
+          <div class="lab-item__output-content">
+            <h3>
+              <strong>Root:</strong>
+              {{ labSnapshotOutput['root'] }}
+            </h3>
+
+            <h3>
+              <strong>Number of iterations:</strong>
+              {{ labSnapshotOutput['iterations'] }}
+            </h3>
+
+            <h3>
+              <strong>Execution time:</strong>
+              {{ labSnapshotOutput['execution_time_ms'] || 0 }} ms
+            </h3>
+
+            {{ labSnapshotOutput['extra'] | json }}
+
+            <div
+              *ngIf="labSnapshotOutput['plot_svg']"
+              [innerHTML]="labSnapshotOutput['plot_svg'].toString() | safe : 'html'"
+              class="lab-item__output-content-plot"
+            ></div>
+          </div>
+        </nml-lab-output>
+      </ng-container>
+
+      <ng-template #noOutputTemplate>
+        <nml-lab-no-output />
+      </ng-template>
+    </ng-container>
+
+    <ng-template #calculationInProgressTemplate>
+      <nml-lab-calculating />
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+<div class="app">
+  <nml-header class="app__header" />
+
+  <nml-content class="app__content">
+    <div
+      class="app__content-sidebar"
+      slot="sidebar"
+    >
+      <nml-sidebar />
+    </div>
+
+    <div
+      class="app__content-main"
+      slot="main"
+    >
+      <router-outlet />
+    </div>
+  </nml-content>
+
+  <nml-footer class="app__footer" />
+</div>

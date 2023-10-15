@@ -1,0 +1,27 @@
+<ng-container *ngIf="lab">
+  <div class="lab">
+    <div class="lab__header">
+      <div class="lab__header-content">
+        <h1 class="lab__header-content-name">{{ lab.name }}</h1>
+        <p class="lab__header-content-description">
+          {{ lab.description }}
+        </p>
+      </div>
+
+      <ng-container *ngIf="(canClearOutput$ | async) === true">
+        <button
+          (click)="clearOutput()"
+          class="lab__header-button"
+          color="primary"
+          mat-flat-button
+        >
+          Clear Output
+        </button>
+      </ng-container>
+    </div>
+
+    <div class="lab__content">
+      <ng-template [cdkPortalOutlet]="componentPortal" />
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "api"
+version = "0.1.0"
+description = "Numerical Methods Labs API"
+authors = ["Oleksandr Dudynets <hello@dudynets.dev>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">3.11,<3.13"
+fastapi = "^0.103.1"
+uvicorn = "^0.23.2"
+numpy = "^1.26.0"
+sympy = "^1.12"
+matplotlib = "^3.8.0"
+timeout-decorator = "^0.5.0"
+websockets = "^11.0.3"
+psutil = "^5.9.5"
+scipy = "^1.11.3"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.9.1"
+
+[build-system]
+requires = ["poetry-core>=1.6.1"]
+build-backend = "poetry.core.masonry.api"

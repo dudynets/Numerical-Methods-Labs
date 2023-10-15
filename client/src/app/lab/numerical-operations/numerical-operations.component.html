@@ -1,0 +1,81 @@
+<div class="lab-item">
+  <div class="lab-item__input">
+    <h2 class="lab-item__input-title">
+      <mat-icon>functions</mat-icon>
+      Input
+    </h2>
+    <form
+      [formGroup]="inputForm"
+      class="lab-item__input-form"
+    >
+      <mat-form-field>
+        <mat-label>First operand</mat-label>
+        <input
+          formControlName="a"
+          matInput
+          type="number"
+        />
+        <mat-error *ngIf="firstOperand.hasError('required')">This field is required.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Operation</mat-label>
+        <mat-select formControlName="op">
+          <mat-option [value]="OperationType.Add">Addition (+)</mat-option>
+          <mat-option [value]="OperationType.Subtract">Subtraction (-)</mat-option>
+          <mat-option [value]="OperationType.Multiply">Multiplication (*)</mat-option>
+          <mat-option [value]="OperationType.Divide">Division (/)</mat-option>
+          <mat-option [value]="OperationType.Power">Power (^)</mat-option>
+          <mat-option [value]="OperationType.Mod">Mod (%)</mat-option>
+          <mat-option [value]="OperationType.FloorDivide">Floor Division (//)</mat-option>
+        </mat-select>
+        <mat-error *ngIf="operation.hasError('required')">This field is required.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Second operand</mat-label>
+        <input
+          formControlName="b"
+          matInput
+          type="number"
+        />
+        <mat-error *ngIf="secondOperand.hasError('required')">This field is required.</mat-error>
+      </mat-form-field>
+    </form>
+
+    <button
+      (click)="submit()"
+      [disabled]="inputForm.invalid || (canRunTask$ | async) === false"
+      class="lab-item__input-submit"
+      color="primary"
+      mat-flat-button
+    >
+      Calculate
+    </button>
+  </div>
+
+  <mat-divider />
+
+  <div class="lab-item__output">
+    <ng-container
+      *ngIf="(serverTaskState$ | async) !== ServerTaskState.Calculating; else calculationInProgressTemplate"
+    >
+      <ng-container *ngIf="(labSnapshot$ | async)?.output as labSnapshotOutput; else noOutputTemplate">
+        <nml-lab-output [error]="labSnapshotOutput.error">
+          <h3>
+            <strong> Result: </strong>
+            {{ labSnapshotOutput['result'] }}
+          </h3>
+        </nml-lab-output>
+      </ng-container>
+
+      <ng-template #noOutputTemplate>
+        <nml-lab-no-output />
+      </ng-template>
+    </ng-container>
+
+    <ng-template #calculationInProgressTemplate>
+      <nml-lab-calculating />
+    </ng-template>
+  </div>
+</div>

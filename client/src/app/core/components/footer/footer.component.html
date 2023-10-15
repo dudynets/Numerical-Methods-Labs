@@ -1,0 +1,58 @@
+<mat-toolbar
+  class="footer"
+  color="secondary"
+>
+  <ng-container [ngSwitch]="connectionStatus$ | async">
+    <ng-container *ngSwitchCase="ConnectionStatus.Connected">
+      <span class="footer__status footer__status--connected"></span>
+      <span class="footer__title"> Connected </span>
+      <span class="footer__spacer"></span>
+
+      <ng-container *ngIf="serverHealth$ | async as serverHealth">
+        <nml-server-load
+          [serverHealth]="serverHealth"
+          class="footer__server-load"
+        />
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="ConnectionStatus.Connecting">
+      <span class="footer__status footer__status--connecting"></span>
+      <span class="footer__title">Connecting...</span>
+
+      <mat-progress-bar
+        class="footer__progress-bar"
+        mode="indeterminate"
+      >
+      </mat-progress-bar>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="ConnectionStatus.Disconnected">
+      <span class="footer__status footer__status--disconnected"></span>
+      <span class="footer__title"> No Connection to Server </span>
+      <span class="footer__spacer"></span>
+
+      <button
+        (click)="reconnect()"
+        class="footer__button"
+        color="primary"
+        mat-flat-button
+      >
+        <mat-icon>refresh</mat-icon>
+        Reconnect
+      </button>
+
+      <button
+        [routerLink]="['/settings']"
+        class="footer__button"
+        color="primary"
+        mat-flat-button
+      >
+        <mat-icon>settings</mat-icon>
+        Settings
+      </button>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #noConnectionTemplate> </ng-template>
+</mat-toolbar>

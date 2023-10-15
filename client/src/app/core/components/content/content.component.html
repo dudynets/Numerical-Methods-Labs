@@ -1,0 +1,13 @@
+<mat-drawer-container class="content">
+  <mat-drawer
+    [mode]="sidebarMode"
+    [opened]="(isSidebarOpened$ | async)!"
+    class="content__sidebar"
+  >
+    <ng-content select="[slot='sidebar']"></ng-content>
+  </mat-drawer>
+
+  <div class="content__main">
+    <ng-content select="[slot='main']"></ng-content>
+  </div>
+</mat-drawer-container>

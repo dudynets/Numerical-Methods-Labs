@@ -1,0 +1,53 @@
+<div class="server-load">
+  <div class="server-load__item">
+    <p class="server-load__item-title">CPU LOAD:</p>
+    <div class="server-load__item-spinner">
+      <small
+        [class.server-load__item-spinner-value--one-digit]="serverHealth.cpu_load < 10"
+        [class.server-load__item-spinner-value--three-digits]="serverHealth.cpu_load >= 100"
+        class="server-load__item-spinner-value"
+      >
+        {{ serverHealth.cpu_load | number : '1.0-0' }}
+      </small>
+      <mat-progress-spinner
+        [color]="serverHealth.cpu_load > 90 ? 'warn' : 'primary'"
+        [matTooltip]="cpuLoadTooltip"
+        [value]="serverHealth.cpu_load"
+        diameter="24"
+      />
+    </div>
+  </div>
+
+  <div class="server-load__item">
+    <p class="server-load__item-title">MEMORY LOAD:</p>
+    <div class="server-load__item-spinner">
+      <small
+        [class.server-load__item-spinner-value--one-digit]="serverHealth.memory_load < 10"
+        [class.server-load__item-spinner-value--three-digits]="serverHealth.memory_load >= 100"
+        class="server-load__item-spinner-value"
+      >
+        {{ serverHealth.memory_load | number : '1.0-0' }}
+      </small>
+      <mat-progress-spinner
+        [color]="serverHealth.memory_load > 90 ? 'warn' : 'primary'"
+        [matTooltip]="memoryUsageTooltip"
+        [value]="serverHealth.memory_load"
+        diameter="24"
+      />
+    </div>
+  </div>
+
+  <div class="server-load__item">
+    <p class="server-load__item-title">MEMORY USED:</p>
+    <p class="server-load__item-value">
+      {{ convertBytes(serverHealth.used_memory) }} / {{ convertBytes(serverHealth.total_memory) }}
+    </p>
+  </div>
+
+  <div class="server-load__item">
+    <p class="server-load__item-title">AVAILABLE MEMORY:</p>
+    <p class="server-load__item-value">
+      {{ convertBytes(serverHealth.available_memory) }}
+    </p>
+  </div>
+</div>

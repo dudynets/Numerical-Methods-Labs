@@ -1,0 +1,21 @@
+version: '3'
+services:
+  client:
+    container_name: nml-client
+    build:
+      context: ./client
+    ports:
+      - "80:80"
+    volumes:
+      - ./client:/app
+    working_dir: /app
+
+  api:
+    container_name: nml-api
+    build:
+      context: ./api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app
+    working_dir: /app

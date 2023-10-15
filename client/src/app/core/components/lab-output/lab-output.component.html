@@ -1,0 +1,30 @@
+<div class="lab-output">
+  <div class="lab-output__header">
+    <ng-container *ngIf="!error; else errorHeaderTemplate">
+      <h2>
+        <mat-icon>check_circle</mat-icon>
+        Result
+      </h2>
+    </ng-container>
+
+    <ng-template #errorHeaderTemplate>
+      <h2>
+        <mat-icon>error</mat-icon>
+        Error
+      </h2>
+    </ng-template>
+  </div>
+
+  <div class="lab-output__content">
+    <ng-container *ngIf="!error; else errorContentTemplate">
+      <ng-content></ng-content>
+    </ng-container>
+
+    <ng-template #errorContentTemplate>
+      <div class="lab-output__error">
+        <p>{{ error?.status }} {{ error?.statusText }}</p>
+        <pre>{{ error?.detail | json }}</pre>
+      </div>
+    </ng-template>
+  </div>
+</div>
