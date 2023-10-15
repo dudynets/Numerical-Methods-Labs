@@ -26,11 +26,11 @@ The easiest way to run the project is to use Docker. To do this, you will need t
 
 ### API (separately)
 
-Full instructions for running the API separately are available in the [API README](src/api/README.md).
+Full instructions for running the API separately are available in the [API README](api/README.md).
 
 ### Client (separately)
 
-Full instructions for running the client separately are available in the [client README](src/client/README.md).
+Full instructions for running the client separately are available in the [client README](client/README.md).
 
 ## License
 
