@@ -1,8 +1,10 @@
-from fastapi import FastAPI, HTTPException, WebSocket
-from fastapi.openapi.utils import get_openapi
-from fastapi.middleware.cors import CORSMiddleware
-from websockets.exceptions import ConnectionClosedOK
 import asyncio
+
+from fastapi import FastAPI, HTTPException, WebSocket
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
+from websockets.exceptions import ConnectionClosedOK
+
 from api.constants import CALCULATION_TIMEOUT_ERROR_MESSAGE
 from core.functions.newtons_method import newtons_method, NewtonsMethodResponse
 from core.functions.numerical_operation import (

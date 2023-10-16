@@ -1,12 +1,14 @@
-import sympy as sp
-import numpy as np
+import time
+from io import BytesIO
+
 import matplotlib.pyplot as plt
+import numpy as np
+import sympy as sp
 from fastapi import HTTPException
 from pydantic import BaseModel
 from scipy import optimize
-import time
-from io import BytesIO
 from timeout_decorator import timeout
+
 from api.constants import CALCULATION_TIMEOUT, CALCULATION_TIMEOUT_ERROR_MESSAGE
 from core.helpers.get_plot_limits import set_plot_limits_by_points
 
