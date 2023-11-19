@@ -47,7 +47,7 @@ export class LabComponent implements OnChanges {
       this.canClearOutput$ = combineLatest([
         this.store.select(LabsSelectors.getLabSnapshot(this.lab.clientUrl)),
         this.store.select(ServerSelectors.getServerTaskState),
-      ]).pipe(map(([snapshot, taskState]) => snapshot?.output !== null && taskState !== ServerTaskState.Calculating));
+      ]).pipe(map(([snapshot, taskState]) => !!snapshot?.output && taskState !== ServerTaskState.Calculating));
     }
   }
 

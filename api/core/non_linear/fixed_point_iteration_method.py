@@ -12,7 +12,7 @@ from api.constants import CALCULATION_TIMEOUT, CALCULATION_TIMEOUT_ERROR_MESSAGE
 from core.helpers.get_plot_limits import set_plot_limits_by_points
 
 
-class SimpleIterationResponse(BaseModel):
+class FixedPointIterationMethodResponse(BaseModel):
     root: float
     iterations: int
     execution_time_ms: float
@@ -33,21 +33,20 @@ class SimpleIterationResponse(BaseModel):
     }
 
 
-def simple_iteration_implementation(f, x0, tol, max_iter):
+def fixed_point_iteration_implementation(f, x0, tol, max_iter):
     """
     Find the root of the equation 0 = f(x) using the fixed-point iteration method.
 
-    Args:
-    func: The function representing 0 = f(x).
-    x0: Initial guess for the root.
-    max_iterations: Maximum number of iterations.
-    tolerance: Convergence tolerance.
+    :param f:           The function representing 0 = f(x).
+    :param x0:          Initial guess for the root.
+    :param tol:         Tolerance for convergence.
+    :param max_iter:    Maximum number of iterations.
 
-    Returns:
-    The approximate root of the equation.
+    :return: The approximate root of the equation and the number of iterations required to converge.
     """
     x = x0
     iterations = 0
+    steps = []
 
     for i in range(max_iter):
         x_next = x - f(x)  # Modify the iteration formula.
@@ -55,8 +54,10 @@ def simple_iteration_implementation(f, x0, tol, max_iter):
             return (
                 float(x_next),
                 iterations + 1,
+                steps,
             )  # Converged to a root within the tolerance.
         x = x_next
+        steps.append(x)
         iterations += 1
 
     return (
@@ -69,9 +70,11 @@ def simple_iteration_implementation(f, x0, tol, max_iter):
     CALCULATION_TIMEOUT,
     timeout_exception=TimeoutError,
 )
-def simple_iteration(f_string: str, x0: float, tol: float = 1e-6, max_iter: int = 100):
+def fixed_point_iteration(
+    f_string: str, x0: float, tol: float = 1e-6, max_iter: int = 100
+):
     """
-    Find the root of a function using simple iteration method and create an SVG plot with details.
+    Find the root of a function using fixed-point iteration method and create an SVG plot with details.
 
     :param f_string:    String expression of the function f(x).
     :param x0:          Initial guess for the root.
@@ -90,17 +93,19 @@ def simple_iteration(f_string: str, x0: float, tol: float = 1e-6, max_iter: int 
 
         x = sp.symbols("x")
 
-        # Parse string expression to symbolic functions
+        # Parse string expression to symbolic methods
         f = sp.sympify(f_string)
 
-        # Convert to numpy functions for numerical calculations
+        # Convert to numpy methods for numerical calculations
         f_np = sp.lambdify(x, f, "numpy")
 
         # Measure execution time
         start_time = time.time()
 
         # Simple iteration method implementation
-        root, iterations = simple_iteration_implementation(f_np, x0, tol, max_iter)
+        root, iterations, steps = fixed_point_iteration_implementation(
+            f_np, x0, tol, max_iter
+        )
 
         # Measure execution time
         execution_time_ms = (time.time() - start_time) * 1000
@@ -112,6 +117,12 @@ def simple_iteration(f_string: str, x0: float, tol: float = 1e-6, max_iter: int 
             root + (root_to_x0_distance * 2),
             10000,
         )
+        if root_to_x0_distance == 0:
+            x_values = np.linspace(
+                root - 10,
+                root + 10,
+                10000,
+            )
 
         # Add a zero to the x_values
         for i in range(len(x_values) - 1):
@@ -129,6 +140,16 @@ def simple_iteration(f_string: str, x0: float, tol: float = 1e-6, max_iter: int 
         plt.plot(x_values, y_values, label="f(x)")
         plt.axvline(0, color="black", linewidth=0.5)
         plt.axhline(0, color="black", linewidth=0.5)
+
+        for step in steps:
+            plt.scatter(
+                step,
+                0,
+                color="green",
+                marker="o",
+                zorder=3,
+                alpha=0.5,
+            )
 
         plt.scatter(
             root,

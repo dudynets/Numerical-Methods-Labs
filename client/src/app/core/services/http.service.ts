@@ -13,7 +13,7 @@ export class HttpService {
   private readonly store = inject(Store);
   private readonly http = inject(HttpClient);
 
-  calculateLab(lab: Lab, labInput: LabInput): Observable<LabOutput> {
+  calculateLab(lab: Lab, labInput: LabInput, useJson: boolean = false): Observable<LabOutput> {
     const apiUrl = this.store.selectSnapshot(ServerSelectors.getApiUrl);
     if (!apiUrl) throw new Error('API URL not set');
 
@@ -24,9 +24,17 @@ export class HttpService {
       }
     }
 
+    // Stringify labInput if useJson is true
+    if (useJson) {
+      for (const key in labInput) {
+        labInput[key] = JSON.stringify(labInput[key]);
+      }
+    }
+
     const queryParams = new HttpParams({
-      fromObject: labInput,
+      fromObject: labInput as { [key: string]: string | number | boolean },
     });
+
     return this.http.get<LabOutput>(`${apiUrl}/${lab.apiUrl}`, { params: queryParams });
   }
 

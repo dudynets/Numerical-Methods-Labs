@@ -8,7 +8,7 @@ export interface LabSnapshot {
 }
 
 export interface LabInput {
-  [key: string]: string | number | boolean;
+  [key: string]: unknown;
 }
 
 export interface LabOutput {

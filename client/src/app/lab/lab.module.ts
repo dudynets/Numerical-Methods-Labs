@@ -4,8 +4,7 @@ import { CommonModule } from '@angular/common';
 import { LabRoutingModule } from './lab-routing.module';
 import { LabComponent } from './lab.component';
 import { PortalModule } from '@angular/cdk/portal';
-import { NumericalOperationsComponent } from './numerical-operations/numerical-operations.component';
-import { NewtonsMethodComponent } from './newtons-method/newtons-method.component';
+import { NewtonsMethodComponent } from '@lab/non-linear/newtons-method/newtons-method.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -16,18 +15,30 @@ import { MatButtonModule } from '@angular/material/button';
 import { LabOutputModule } from '@core/components/lab-output/lab-output.module';
 import { SafePipeModule } from 'safe-pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SimpleIterationComponent } from './simple-iteration/simple-iteration.component';
+import { FixedPointIterationMethodComponent } from '@lab/non-linear/fixed-point-iteration-method/fixed-point-iteration-method.component';
+import { SecantMethodComponent } from '@lab/non-linear/secant-method/secant-method.component';
+import { GaussianEliminationMethodComponent } from '@lab/systems-of-linear/gaussian-elimination-method/gaussian-elimination-method.component';
+import { CurlyBracketsWrapperModule } from '@core/components/curly-brackets-wrapper/curly-brackets-wrapper.module';
+import { LeastSquaresMethodComponent } from '@lab/systems-of-linear/least-squares-method/least-squares-method.component';
+import { FixedPointIterationSystemMethodComponent } from './systems-of-linear/fixed-point-iteration-system-method/fixed-point-iteration-system-method.component';
+import { NewtonsInterpolationMethodComponent } from './interpolation/newtons-interpolation-method/newtons-interpolation-method.component';
+import { LagrangesInterpolationMethodComponent } from '@lab/interpolation/lagranges-interpolation-method/lagranges-interpolation-method.component';
 
 const LAB_COMPONENTS = [
-  NumericalOperationsComponent,
   NewtonsMethodComponent,
+  FixedPointIterationMethodComponent,
+  SecantMethodComponent,
+  GaussianEliminationMethodComponent,
+  LeastSquaresMethodComponent,
+  FixedPointIterationSystemMethodComponent,
+  NewtonsInterpolationMethodComponent,
+  LagrangesInterpolationMethodComponent,
 ];
 
 @NgModule({
   declarations: [
     LabComponent,
     ...LAB_COMPONENTS,
-    SimpleIterationComponent,
   ],
   imports: [
     CommonModule,
@@ -43,9 +54,8 @@ const LAB_COMPONENTS = [
     LabOutputModule,
     SafePipeModule,
     MatTooltipModule,
+    CurlyBracketsWrapperModule,
   ],
-  exports: [
-    NumericalOperationsComponent,
-  ],
+  exports: [],
 })
 export class LabModule {}

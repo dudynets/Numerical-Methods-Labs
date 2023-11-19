@@ -22,7 +22,7 @@ def validate_expression(expression: str) -> bool:
     try:
         x = sp.symbols("x")
 
-        # Parse string expressions to symbolic functions
+        # Parse string expressions to symbolic methods
         f = sp.sympify(expression)
 
         sp.lambdify(x, f, "numpy")

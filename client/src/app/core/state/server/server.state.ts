@@ -20,7 +20,7 @@ export class ServerState implements NgxsOnInit {
 
   ngxsOnInit(ctx: StateContext<ServerStateModel>): void {
     const apiUrl = this.storageService.getItem(API_URL_STORAGE_KEY);
-    ctx.dispatch(new SetApiUrl(apiUrl || 'http://localhost:8000/api'));
+    ctx.dispatch(new SetApiUrl(apiUrl || 'http://localhost:8000'));
   }
 
   @Action(Connect)

@@ -1,24 +1,26 @@
 <div class="sidebar">
   <div class="sidebar__labs">
-    <mat-toolbar class="sidebar__labs-title">
-      <span>Labs</span>
-    </mat-toolbar>
+    <ng-container *ngFor="let labsGroup of labsGroupedByType">
+      <mat-toolbar class="sidebar__labs-title">
+        <span>{{ labsGroup.type }}</span>
+      </mat-toolbar>
 
-    <mat-action-list class="sidebar__labs-items">
-      <ng-container *ngFor="let lab of labs">
-        <mat-list-item
-          [activated]="isRouteActive('/lab/' + lab.clientUrl)"
-          [matTooltip]="lab.description"
-          [routerLink]="['/lab', lab.clientUrl]"
-          class="sidebar__nav-item"
-          matTooltipPosition="after"
-        >
-          <mat-icon matListItemIcon>science</mat-icon>
-          <span matListItemTitle>{{ lab.name }}</span>
-          <span matListItemLine>{{ lab.description }}</span>
-        </mat-list-item>
-      </ng-container>
-    </mat-action-list>
+      <mat-action-list class="sidebar__labs-items">
+        <ng-container *ngFor="let lab of labsGroup.labs">
+          <mat-list-item
+            [activated]="isRouteActive('/lab/' + lab.clientUrl)"
+            [matTooltip]="lab.description"
+            [routerLink]="['/lab', lab.clientUrl]"
+            class="sidebar__nav-item"
+            matTooltipPosition="after"
+          >
+            <mat-icon matListItemIcon>science</mat-icon>
+            <span matListItemTitle>{{ lab.name }}</span>
+            <span matListItemLine>{{ lab.description }}</span>
+          </mat-list-item>
+        </ng-container>
+      </mat-action-list>
+    </ng-container>
   </div>
 
   <div class="sidebar__miscellaneous">

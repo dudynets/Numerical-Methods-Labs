@@ -8,7 +8,13 @@ export class UpdateLabInput {
 
 export class CalculateLabOutput {
   static readonly type = '[Labs] Calculate Lab Output';
-  constructor(public lab: Lab) {}
+  constructor(
+    public lab: Lab,
+    public options?: {
+      json?: boolean;
+      skipKeys?: string[];
+    },
+  ) {}
 }
 
 export class ClearLabOutput {

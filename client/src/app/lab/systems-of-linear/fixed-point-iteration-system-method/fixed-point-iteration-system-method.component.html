@@ -1,0 +1,177 @@
+<div class="lab-item">
+  <div class="lab-item__input">
+    <h2 class="lab-item__input-title">
+      <mat-icon>functions</mat-icon>
+      Input
+    </h2>
+    <form
+      [formGroup]="inputForm"
+      class="lab-item__input-form"
+    >
+      <div class="lab-item__input-form-matrix">
+        <nml-curly-brackets-wrapper>
+          <div class="lab-item__input-form-matrix--wrapper">
+            <ng-container *ngFor="let row of coefficientMatrix.controls; let rowIndex = index">
+              <div class="lab-item__input-form-matrix-row">
+                <ng-container *ngFor="let col of row.controls; let colIndex = index">
+                  <mat-form-field>
+                    <input
+                      [formControl]="getCoefficientByIndex(rowIndex, colIndex)"
+                      matInput
+                      type="number"
+                    />
+                  </mat-form-field>
+
+                  <span>
+                    x<sub>{{ colIndex + 1 }}</sub>
+                  </span>
+
+                  <ng-container *ngIf="colIndex !== row.controls.length - 1">
+                    <span> + </span>
+                  </ng-container>
+                </ng-container>
+
+                <span> = </span>
+
+                <mat-form-field>
+                  <input
+                    [formControl]="getConstantByIndex(rowIndex)"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+            </ng-container>
+          </div>
+        </nml-curly-brackets-wrapper>
+
+        <div class="lab-item__input-form-matrix-buttons">
+          <button
+            (click)="addRow()"
+            mat-flat-button
+            color="primary"
+            type="button"
+          >
+            <mat-icon>add</mat-icon>
+            Add row
+          </button>
+
+          <button
+            (click)="removeRow()"
+            [disabled]="!canRemoveRow"
+            mat-flat-button
+            color="warn"
+            type="button"
+          >
+            <mat-icon>remove</mat-icon>
+            Remove row
+          </button>
+
+          <button
+            (click)="addCol()"
+            mat-flat-button
+            color="primary"
+            type="button"
+          >
+            <mat-icon>add</mat-icon>
+            Add column
+          </button>
+
+          <button
+            (click)="removeCol()"
+            [disabled]="!canRemoveCol"
+            mat-flat-button
+            color="warn"
+            type="button"
+          >
+            <mat-icon>remove</mat-icon>
+            Remove column
+          </button>
+
+          <button
+            (click)="randomize()"
+            mat-stroked-button
+            type="button"
+          >
+            <mat-icon>shuffle</mat-icon>
+            Randomize
+          </button>
+        </div>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Tolerance</mat-label>
+        <input
+          formControlName="tol"
+          matInput
+          type="number"
+        />
+        <mat-error *ngIf="tol.hasError('greaterThan')">Tolerance must be greater than 0.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Maximum number of iterations</mat-label>
+        <input
+          formControlName="max_iter"
+          matInput
+          type="number"
+        />
+        <mat-error *ngIf="maxIter.hasError('min')">Minimum value is {{ maxIter.errors?.['min']['min'] }}.</mat-error>
+      </mat-form-field>
+    </form>
+
+    <button
+      (click)="submit()"
+      [disabled]="inputForm.invalid || (canRunTask$ | async) === false"
+      class="lab-item__input-submit"
+      color="primary"
+      mat-flat-button
+    >
+      Calculate
+    </button>
+  </div>
+
+  <mat-divider />
+
+  <div class="lab-item__output">
+    <ng-container
+      *ngIf="(serverTaskState$ | async) !== ServerTaskState.Calculating; else calculationInProgressTemplate"
+    >
+      <ng-container *ngIf="(labSnapshot$ | async)?.output as labSnapshotOutput; else noOutputTemplate">
+        <nml-lab-output [error]="labSnapshotOutput.error">
+          <div class="lab-item__output-content">
+            <h3>
+              <strong>Roots:</strong>
+
+              <nml-curly-brackets-wrapper [small]="true">
+                <ng-container *ngFor="let root of getRoots(labSnapshotOutput['roots']); let i = index">
+                  <p>
+                    x<sub>{{ i + 1 }}</sub> = {{ root }}
+                  </p>
+                </ng-container>
+              </nml-curly-brackets-wrapper>
+            </h3>
+
+            <h3>
+              <strong>Number of iterations:</strong>
+              {{ labSnapshotOutput['iterations'] }}
+            </h3>
+
+            <h3>
+              <strong>Execution time:</strong>
+              {{ labSnapshotOutput['execution_time_ms'] || 0 }} ms
+            </h3>
+          </div>
+        </nml-lab-output>
+      </ng-container>
+
+      <ng-template #noOutputTemplate>
+        <nml-lab-no-output />
+      </ng-template>
+    </ng-container>
+
+    <ng-template #calculationInProgressTemplate>
+      <nml-lab-calculating />
+    </ng-template>
+  </div>
+</div>

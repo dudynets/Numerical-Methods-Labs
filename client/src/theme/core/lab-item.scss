@@ -26,6 +26,119 @@
         flex: 1;
         padding-bottom: 8px;
       }
+
+      &-matrix,
+      &-vectors {
+        width: 100%;
+
+        mat-form-field {
+          min-width: 0;
+          padding: 0;
+
+          .mat-mdc-form-field-subscript-wrapper {
+            display: none;
+          }
+        }
+
+        .mat-mdc-text-field-wrapper {
+          padding: 0 8px;
+        }
+
+        .mat-mdc-form-field-flex {
+          width: 40px;
+        }
+
+        .mat-mdc-input-element {
+          text-align: center;
+
+          &::-webkit-outer-spin-button,
+          &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+
+          &[type='number'] {
+            -moz-appearance: textfield;
+          }
+        }
+
+        &-buttons {
+          display: flex;
+          flex-direction: row;
+          gap: 8px;
+          align-items: center;
+
+          button {
+            flex: 1;
+
+            .mdc-button__label {
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+
+      &-matrix {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding-bottom: 30px;
+        overflow: hidden;
+
+        &--wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          overflow-x: auto;
+        }
+
+        &-row {
+          display: flex;
+          flex-direction: row;
+          gap: 8px;
+          align-items: center;
+          font-size: 16px;
+          width: fit-content;
+        }
+      }
+
+      &-vectors {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding-bottom: 30px;
+        overflow: hidden;
+
+        &--wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          overflow-x: auto;
+        }
+
+        &-vector {
+          display: flex;
+          gap: 16px;
+          align-items: center;
+          justify-content: center;
+          width: fit-content;
+
+          &-title {
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            background: #fafafa;
+            height: 56px;
+            padding-right: 16px;
+            display: flex;
+            align-items: center;
+            font-weight: 800 !important;
+            margin: 0 -16px 0 0 !important;
+          }
+        }
+      }
     }
 
     &-submit {
@@ -41,6 +154,14 @@
 
       h3 {
         margin: 0;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      nml-curly-brackets-wrapper {
+        margin-top: 8px;
       }
 
       &-plot {

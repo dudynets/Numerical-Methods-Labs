@@ -22,11 +22,26 @@
         <mat-error *ngIf="fString.hasError('invalidExpression')">Invalid expression.</mat-error>
       </mat-form-field>
 
+      <mat-form-field
+        matTooltip="Supported operators: x, +, -, *, /, ^, sin, cos, tan, log, ln, sqrt, abs, E, pi, (, ), ."
+        matTooltipPosition="above"
+      >
+        <mat-label>Function derivative f'(x)</mat-label>
+        <input
+          formControlName="df_string"
+          matInput
+          type="text"
+        />
+        <mat-error *ngIf="dfString.hasError('required')">This field is required.</mat-error>
+        <mat-error *ngIf="dfString.hasError('invalidExpression')">Invalid expression.</mat-error>
+      </mat-form-field>
+
       <mat-form-field>
-        <mat-label>x<sub>0</sub> (Initial guess)</mat-label>
+        <mat-label>Initial guess</mat-label>
         <input
           formControlName="x0"
           matInput
+          step="0.1"
           type="number"
         />
         <mat-error *ngIf="x0.hasError('required')">This field is required.</mat-error>
@@ -84,11 +99,14 @@
             </h3>
 
             <h3>
+              <strong>Number of function calls:</strong>
+              {{ labSnapshotOutput['function_calls'] }}
+            </h3>
+
+            <h3>
               <strong>Execution time:</strong>
               {{ labSnapshotOutput['execution_time_ms'] || 0 }} ms
             </h3>
-
-            {{ labSnapshotOutput['extra'] | json }}
 
             <div
               *ngIf="labSnapshotOutput['plot_svg']"

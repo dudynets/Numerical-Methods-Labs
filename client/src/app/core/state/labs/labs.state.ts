@@ -51,11 +51,17 @@ export class LabsState implements NgxsOnInit {
     ctx: StateContext<LabsStateModel>,
     action: CalculateLabOutput,
   ): Observable<LabOutput | HttpErrorResponse> | void {
-    const labInput = ctx.getState()[action.lab.clientUrl]?.input ?? null;
-    if (labInput) {
+    let labInput = ctx.getState()[action.lab.clientUrl]?.input ?? null;
+    const labInputCopy = { ...labInput };
+    const skipKeys = action.options?.skipKeys ?? [];
+    for (const key of skipKeys) {
+      if (labInputCopy && labInputCopy[key]) delete labInputCopy[key];
+    }
+
+    if (labInputCopy) {
       ctx.dispatch(new UpdateServerTaskState(ServerTaskState.Calculating));
 
-      return this.httpService.calculateLab(action.lab, labInput).pipe(
+      return this.httpService.calculateLab(action.lab, labInputCopy, action.options?.json ?? false).pipe(
         delay(APP_CONFIG.calculationDelayMs),
         tap(() => {
           ctx.dispatch(new UpdateServerTaskState(ServerTaskState.Idle));

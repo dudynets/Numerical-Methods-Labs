@@ -57,25 +57,34 @@ def newtons_method(
     try:
         x = sp.symbols("x")
 
-        # Parse LaTeX expressions to symbolic functions
+        # Parse LaTeX expressions to symbolic methods
         f = sp.sympify(f_string)
         f_prime = sp.sympify(df_string)
 
-        # Convert to numpy functions for numerical calculations
+        # Convert to numpy methods for numerical calculations
         f_np = sp.lambdify(x, f, "numpy")
         f_prime_np = sp.lambdify(x, f_prime, "numpy")
 
         # Measure execution time
         start_time = time.time()
 
-        # Find the root using optimize.newton
-        result = optimize.newton(
-            f_np, x0, fprime=f_prime_np, tol=tol, maxiter=max_iter, full_output=True
-        )
+        # Find the root
+        root = x0
+        iterations = 0
+        function_calls = 0
 
-        root = result[0]
-        iterations = result[1].iterations
-        function_calls = result[1].function_calls
+        try:
+            for _ in range(max_iter):
+                root = root - f_np(root) / f_prime_np(root)
+                iterations += 1
+                function_calls += 3
+
+                if abs(f_np(root)) < tol:
+                    break
+        except Exception as e:
+            root, iterations, function_calls = optimize.newton(
+                f_np, x0, fprime=f_prime_np, tol=tol, maxiter=max_iter, full_output=True
+            )
 
         # Calculate execution time in milliseconds
         execution_time_ms = (time.time() - start_time) * 1000
@@ -87,6 +96,12 @@ def newtons_method(
             root + (root_to_x0_distance * 2),
             400,
         )
+        if root_to_x0_distance == 0:
+            x_values = np.linspace(
+                root - 10,
+                root + 10,
+                10000,
+            )
         y_values = f_np(x_values)
         tangent = f_prime_np(root) * (x_values - root) + f_np(root)
 

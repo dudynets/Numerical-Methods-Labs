@@ -1,7 +1,7 @@
 import math
 
 
-def set_plot_limits_by_points(plt, points):
+def set_plot_limits_by_points(plt, points, margin=2):
     if not points:
         return None  # Handle the case of an empty list
 
@@ -22,10 +22,10 @@ def set_plot_limits_by_points(plt, points):
     min_distance = min(math.dist((center_x, center_y), point) for point in points)
 
     # Calculate the plot limits with the margin
-    x_min = center_x - min_distance * 2
-    x_max = center_x + min_distance * 2
-    y_min = center_y - min_distance * 2
-    y_max = center_y + min_distance * 2
+    x_min = center_x - min_distance * margin
+    x_max = center_x + min_distance * margin
+    y_min = center_y - min_distance * margin
+    y_max = center_y + min_distance * margin
 
     plt.xlim(x_min, x_max)
     plt.ylim(y_min, y_max)

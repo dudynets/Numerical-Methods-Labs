@@ -1,19 +1,13 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { StorageService } from './storage.service';
 import { MatDrawerMode } from '@angular/material/sidenav';
-
-const SIDEBAR_STORAGE_KEY = 'isSidebarOpened';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SidebarService {
-  private readonly storageService = inject(StorageService);
-
   constructor() {
-    const isSidebarOpened =
-      this.sidebarMode === 'over' ? false : JSON.parse(this.storageService.getItem(SIDEBAR_STORAGE_KEY) || 'false');
+    const isSidebarOpened = this.sidebarMode === 'side';
     this.setSidebarState(isSidebarOpened);
   }
 
@@ -34,6 +28,5 @@ export class SidebarService {
 
   private setSidebarState(state: boolean): void {
     this._isSidebarOpened$.next(state);
-    this.storageService.setItem(SIDEBAR_STORAGE_KEY, JSON.stringify(state));
   }
 }

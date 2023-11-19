@@ -1,0 +1,131 @@
+<div class="lab-item">
+  <div class="lab-item__input">
+    <h2 class="lab-item__input-title">
+      <mat-icon>functions</mat-icon>
+      Input
+    </h2>
+    <form
+      [formGroup]="inputForm"
+      class="lab-item__input-form"
+    >
+      <div class="lab-item__input-form-vectors">
+        <div class="lab-item__input-form-vectors--wrapper">
+          <div class="lab-item__input-form-vectors-vector">
+            <h3 class="lab-item__input-form-vectors-vector-title">X:</h3>
+
+            <ng-container *ngFor="let xi of x.controls">
+              <mat-form-field>
+                <input
+                  matInput
+                  [formControl]="xi"
+                  type="number"
+                  required
+                />
+              </mat-form-field>
+            </ng-container>
+          </div>
+
+          <div class="lab-item__input-form-vectors-vector">
+            <h3 class="lab-item__input-form-vectors-vector-title">Y:</h3>
+
+            <ng-container *ngFor="let yi of y.controls">
+              <mat-form-field>
+                <input
+                  matInput
+                  [formControl]="yi"
+                  type="number"
+                  required
+                />
+              </mat-form-field>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="lab-item__input-form-vectors-buttons">
+          <button
+            (click)="addRow()"
+            mat-flat-button
+            color="primary"
+            type="button"
+          >
+            <mat-icon>add</mat-icon>
+            Add row
+          </button>
+
+          <button
+            (click)="removeRow()"
+            [disabled]="!canRemoveRow"
+            mat-flat-button
+            color="warn"
+            type="button"
+          >
+            <mat-icon>remove</mat-icon>
+            Remove row
+          </button>
+
+          <button
+            (click)="randomize()"
+            mat-stroked-button
+            type="button"
+          >
+            <mat-icon>shuffle</mat-icon>
+            Randomize
+          </button>
+        </div>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Number of points</mat-label>
+        <input
+          formControlName="number_of_points"
+          matInput
+          type="number"
+        />
+        <mat-error *ngIf="numberOfPoints.hasError('min')">Number of points must be greater than 1.</mat-error>
+      </mat-form-field>
+    </form>
+
+    <button
+      (click)="submit()"
+      [disabled]="inputForm.invalid || (canRunTask$ | async) === false"
+      class="lab-item__input-submit"
+      color="primary"
+      mat-flat-button
+    >
+      Calculate
+    </button>
+  </div>
+
+  <mat-divider />
+
+  <div class="lab-item__output">
+    <ng-container
+      *ngIf="(serverTaskState$ | async) !== ServerTaskState.Calculating; else calculationInProgressTemplate"
+    >
+      <ng-container *ngIf="(labSnapshot$ | async)?.output as labSnapshotOutput; else noOutputTemplate">
+        <nml-lab-output [error]="labSnapshotOutput.error">
+          <div class="lab-item__output-content">
+            <h3>
+              <strong>Execution time:</strong>
+              {{ labSnapshotOutput['execution_time_ms'] || 0 }} ms
+            </h3>
+
+            <div
+              *ngIf="labSnapshotOutput['plot_svg']"
+              [innerHTML]="labSnapshotOutput['plot_svg'].toString() | safe : 'html'"
+              class="lab-item__output-content-plot"
+            ></div>
+          </div>
+        </nml-lab-output>
+      </ng-container>
+
+      <ng-template #noOutputTemplate>
+        <nml-lab-no-output />
+      </ng-template>
+    </ng-container>
+
+    <ng-template #calculationInProgressTemplate>
+      <nml-lab-calculating />
+    </ng-template>
+  </div>
+</div>
