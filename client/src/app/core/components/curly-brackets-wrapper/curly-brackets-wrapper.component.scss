@@ -16,7 +16,7 @@
     &-top {
       width: 16px;
       aspect-ratio: 18 / 20.3;
-      background: url('/assets/curly-brackets/top.svg') no-repeat;
+      background: url(../../../../assets/curly-brackets/top.svg) no-repeat;
       background-size: contain;
       margin-left: 11px;
     }
@@ -24,14 +24,14 @@
     &-middle {
       width: 18px;
       aspect-ratio: 20.5 / 45.56;
-      background: url('/assets/curly-brackets/middle.svg') no-repeat;
+      background: url(../../../../assets/curly-brackets/middle.svg) no-repeat;
       background-size: contain;
     }
 
     &-bottom {
       width: 16px;
       aspect-ratio: 18 / 20.3;
-      background: url('/assets/curly-brackets/bottom.svg') no-repeat;
+      background: url(../../../../assets/curly-brackets/bottom.svg) no-repeat;
       background-size: contain;
       margin-left: 11px;
     }
