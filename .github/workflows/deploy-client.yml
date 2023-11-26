@@ -25,7 +25,7 @@ jobs:
         working-directory: ${{env.working-directory}}
 
       - name: Build
-        run: yarn build
+        run: yarn build --base-href https://dudynets.github.io/Numerical-Methods-Labs/
         working-directory: ${{env.working-directory}}
 
       - name: Upload artifact
