@@ -215,10 +215,10 @@ async def __fixed_point_iteration_system_method(
     ),
 )
 async def __newtons_interpolation_method(
-    x: str, y: str, number_of_points: int = 100
+    x: str, y: str, number_of_points: int = 100, x_value: float = 0.0
 ) -> NewtonsInterpolationMethodResponse:
     try:
-        return newtons_interpolation_method(x, y, number_of_points)
+        return newtons_interpolation_method(x, y, number_of_points, x_value)
     except TimeoutError:
         raise HTTPException(status_code=400, detail=CALCULATION_TIMEOUT_ERROR_MESSAGE)
 
@@ -235,10 +235,10 @@ async def __newtons_interpolation_method(
     ),
 )
 async def __lagranges_interpolation_method(
-    x: str, y: str, number_of_points: int = 100
+    x: str, y: str, number_of_points: int = 100, x_value: float = 0.0
 ) -> LagrangesInterpolationMethodResponse:
     try:
-        return lagranges_interpolation_method(x, y, number_of_points)
+        return lagranges_interpolation_method(x, y, number_of_points, x_value)
     except TimeoutError:
         raise HTTPException(status_code=400, detail=CALCULATION_TIMEOUT_ERROR_MESSAGE)
 
@@ -248,7 +248,7 @@ def custom_openapi():
         return app.openapi_schema
     openapi_schema = get_openapi(
         title="Numerical Methods Labs API",
-        version="1.0.0",
+        version="1.1.0",
         summary="This project provides an API for numerical methods labs",
         description=(
             "- This project uses Python FastAPI to provide a REST API for the Numerical Methods Labs project.\n"

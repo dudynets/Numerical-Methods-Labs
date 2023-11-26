@@ -22,8 +22,15 @@
 
     <ng-template #errorContentTemplate>
       <div class="lab-output__error">
-        <p>{{ error?.status }} {{ error?.statusText }}</p>
-        <pre>{{ error?.detail | json }}</pre>
+        <mat-chip> {{ error?.status }} {{ error?.statusText }} </mat-chip>
+
+        <ng-container *ngIf="errorDetail">
+          <p>{{ errorDetail }}</p>
+        </ng-container>
+
+        <ng-container *ngIf="!errorDetail">
+          <pre>{{ error?.detail | json }}</pre>
+        </ng-container>
       </div>
     </ng-template>
   </div>

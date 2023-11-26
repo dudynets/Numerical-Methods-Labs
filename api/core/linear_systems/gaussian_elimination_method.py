@@ -52,6 +52,11 @@ def gaussian_elimination_method_implementation(coefficient_matrix, constants):
         b[i], b[max_row] = b[max_row], b[i]
 
         pivot = A[i][i]
+        if pivot == 0:
+            raise ValueError(
+                "The system has no unique solution. Division by zero occurred in runtime."
+            )
+
         for k in range(i, n):
             A[i][k] /= pivot
             iterations += 1

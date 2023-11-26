@@ -13,6 +13,7 @@ import { ServerTaskState } from '@nml/core/state/server/server.model';
 
 const DEFAULT_VECTOR_SIZE = 4;
 const DEFAULT_NUMBER_OF_POINTS = 100;
+const DEFAULT_X_VALUE = 0;
 
 const getEmptyConstantVector = (): FormControl<number | null>[] => {
   const vector = [];
@@ -45,6 +46,7 @@ export class LagrangesInterpolationMethodComponent implements OnInit {
     number_of_points: new FormControl<number | null>(DEFAULT_NUMBER_OF_POINTS, [
       Validators.min(2),
     ]),
+    x_value: new FormControl<number | null>(DEFAULT_X_VALUE, [Validators.required]),
   });
 
   private readonly store = inject(Store);
@@ -70,6 +72,10 @@ export class LagrangesInterpolationMethodComponent implements OnInit {
     return this.inputForm.get('number_of_points') as FormControl<number | null>;
   }
 
+  get xValue(): FormControl<number | null> {
+    return this.inputForm.get('x_value') as FormControl<number | null>;
+  }
+
   get canRemoveRow(): boolean {
     return !!this.vectorSize.value && this.vectorSize.value > 3;
   }
@@ -82,6 +88,9 @@ export class LagrangesInterpolationMethodComponent implements OnInit {
         emitEvent: false,
       });
       this.numberOfPoints.setValue((labSnapshot?.input?.['number_of_points'] as number) || DEFAULT_NUMBER_OF_POINTS, {
+        emitEvent: false,
+      });
+      this.xValue.setValue((labSnapshot?.input?.['x_value'] as number) || DEFAULT_X_VALUE, {
         emitEvent: false,
       });
 

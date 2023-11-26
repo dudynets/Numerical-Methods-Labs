@@ -48,17 +48,22 @@ def fixed_point_iteration_implementation(f, x0, tol, max_iter):
     iterations = 0
     steps = []
 
-    for i in range(max_iter):
-        x_next = x - f(x)  # Modify the iteration formula.
-        if abs(x_next - x) < tol:
-            return (
-                float(x_next),
-                iterations + 1,
-                steps,
-            )  # Converged to a root within the tolerance.
-        x = x_next
-        steps.append(x)
-        iterations += 1
+    try:
+        for i in range(max_iter):
+            x_next = x - f(x)  # Modify the iteration formula.
+            if abs(x_next - x) < tol:
+                return (
+                    float(x_next),
+                    iterations + 1,
+                    steps,
+                )  # Converged to a root within the tolerance.
+            x = x_next
+            steps.append(x)
+            iterations += 1
+    except OverflowError:
+        raise ValueError(
+            "Overflow error encountered. Consider using a different initial guess for the root."
+        )
 
     return (
         float(x),

@@ -12,6 +12,8 @@ from api.constants import CALCULATION_TIMEOUT, CALCULATION_TIMEOUT_ERROR_MESSAGE
 
 
 class NewtonsInterpolationMethodResponse(BaseModel):
+    x_value: float
+    x_value_interpolated: float
     execution_time_ms: float
     plot_svg: str
 
@@ -19,6 +21,8 @@ class NewtonsInterpolationMethodResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
+                    "x_value": 0.0,
+                    "x_value_interpolated": 0.0,
                     "execution_time_ms": 0.05000114440917969,
                     "plot_svg": "<svg>...</svg>",
                 }
@@ -27,15 +31,18 @@ class NewtonsInterpolationMethodResponse(BaseModel):
     }
 
 
-def newtons_interpolation_method_implementation(x_values, y_values, number_of_points):
+def newtons_interpolation_method_implementation(
+    x_values, y_values, number_of_points, x_value
+):
     """
     Interpolate a polynomial using Newton's interpolation method.
 
     :param x_values:            List of x values.
     :param y_values:            List of y values.
     :param number_of_points:    Number of points to plot.
+    :param x_value:             The x value to interpolate.
 
-    :return: x and y values of the interpolated polynomial
+    :return: x and y values of the interpolated polynomial and the interpolated x value
     """
 
     if len(x_values) != len(set(x_values)):
@@ -68,22 +75,41 @@ def newtons_interpolation_method_implementation(x_values, y_values, number_of_po
         coefficients[0, :], x_values, x_interpolation
     )
 
-    return x_interpolation, y_interpolation
+    x_value_interpolated = newton_interpolation(coefficients[0, :], x_values, x_value)
+
+    x_interpolation_extended = np.append(x_interpolation, x_value)
+    plot_extension_x = np.linspace(
+        min(x_interpolation_extended), max(x_interpolation_extended), number_of_points
+    )
+    plot_extension_y = newton_interpolation(
+        coefficients[0, :], x_values, plot_extension_x
+    )
+
+    return (
+        x_interpolation,
+        y_interpolation,
+        x_value_interpolated,
+        plot_extension_x,
+        plot_extension_y,
+    )
 
 
 @timeout(
     CALCULATION_TIMEOUT,
     timeout_exception=TimeoutError,
 )
-def newtons_interpolation_method(x: str, y: str, number_of_points: int = 100):
+def newtons_interpolation_method(
+    x: str, y: str, number_of_points: int = 100, x_value: float = 0.0
+):
     """
     Interpolate a polynomial using Newton's interpolation method.
 
     :param x:                   List of x values as JSON string.
     :param y:                   List of y values as JSON string.
     :param number_of_points:    Number of points to plot.
+    :param x_value:             The x value to interpolate.
 
-    :return: A dictionary containing the execution time and SVG plot.
+    :return: A dictionary containing x_value, x_value_interpolated, execution_time_ms and plot_svg.
     """
 
     try:
@@ -99,9 +125,13 @@ def newtons_interpolation_method(x: str, y: str, number_of_points: int = 100):
         start_time = time.time()
 
         # Least squares method implementation
-        x_interpolation, y_interpolation = newtons_interpolation_method_implementation(
-            x, y, number_of_points
-        )
+        (
+            x_interpolation,
+            y_interpolation,
+            x_value_interpolated,
+            plot_extension_x,
+            plot_extension_y,
+        ) = newtons_interpolation_method_implementation(x, y, number_of_points, x_value)
 
         # Measure execution time
         execution_time_ms = (time.time() - start_time) * 1000
@@ -110,8 +140,8 @@ def newtons_interpolation_method(x: str, y: str, number_of_points: int = 100):
         plt.figure(figsize=(12, 12))
 
         # Plot the data and the regression line
-        plt.plot(x_interpolation, y_interpolation)
-        plt.plot(x, y, "bo")
+        plt.plot(x_interpolation, y_interpolation, zorder=3)
+        plt.plot(x, y, "bo", zorder=4)
 
         plt.axvline(0, color="black", linewidth=0.5)
         plt.axhline(0, color="black", linewidth=0.5)
@@ -119,6 +149,19 @@ def newtons_interpolation_method(x: str, y: str, number_of_points: int = 100):
         plt.grid(True, linestyle="--", alpha=0.7)
         plt.xlabel("x")
         plt.ylabel("y")
+
+        if not x_value < max(x_interpolation) or not x_value > min(x_interpolation):
+            plt.plot(plot_extension_x, plot_extension_y, "r--", zorder=2)
+
+        plt.scatter(
+            x_value,
+            x_value_interpolated,
+            color="green",
+            zorder=5,
+            label="Interpolated point",
+        )
+
+        plt.legend()
 
         # Save the plot to an SVG file with a transparent background
         svg_buffer = BytesIO()
@@ -137,6 +180,8 @@ def newtons_interpolation_method(x: str, y: str, number_of_points: int = 100):
 
         # Return the results
         return {
+            "x_value": x_value,
+            "x_value_interpolated": x_value_interpolated,
             "execution_time_ms": execution_time_ms,
             "plot_svg": svg_plot,
         }

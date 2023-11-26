@@ -75,6 +75,15 @@
       </div>
 
       <mat-form-field>
+        <mat-label>X value to interpolate</mat-label>
+        <input
+          formControlName="x_value"
+          matInput
+          type="number"
+        />
+      </mat-form-field>
+
+      <mat-form-field>
         <mat-label>Number of points</mat-label>
         <input
           formControlName="number_of_points"
@@ -105,6 +114,11 @@
       <ng-container *ngIf="(labSnapshot$ | async)?.output as labSnapshotOutput; else noOutputTemplate">
         <nml-lab-output [error]="labSnapshotOutput.error">
           <div class="lab-item__output-content">
+            <h3>
+              <strong>f({{ labSnapshotOutput['x_value'] || 0 }}) = </strong>
+              {{ labSnapshotOutput['x_value_interpolated'] || 0 }}
+            </h3>
+
             <h3>
               <strong>Execution time:</strong>
               {{ labSnapshotOutput['execution_time_ms'] || 0 }} ms
