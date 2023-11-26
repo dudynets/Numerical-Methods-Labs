@@ -1,7 +1,6 @@
 import json
 import time
 
-import numpy as np
 from fastapi import HTTPException
 from pydantic import BaseModel
 from timeout_decorator import timeout
@@ -11,6 +10,7 @@ from api.constants import CALCULATION_TIMEOUT, CALCULATION_TIMEOUT_ERROR_MESSAGE
 
 class GaussianEliminationMethodResponse(BaseModel):
     roots: list[float]
+    iterations: int
     execution_time_ms: float
 
     model_config = {
@@ -36,32 +36,42 @@ def gaussian_elimination_method_implementation(coefficient_matrix, constants):
     :return: A list of roots and iteration count.
     """
 
-    coefficient_matrix = np.array(coefficient_matrix, dtype=float)
-    constants = np.array(constants, dtype=float)
-    n = len(coefficient_matrix)
-    x = np.zeros(n)
-    iteration_count = 0
+    A = coefficient_matrix
+    b = constants
 
-    for j in range(n):
-        if coefficient_matrix[j][j] == 0:
-            raise ValueError(
-                f"Division by zero error was encountered while running the Gaussian elimination method."
-            )
+    iterations = 0
 
-        for k in range(j + 1, n):
-            factor = coefficient_matrix[k][j] / coefficient_matrix[j][j]
-            coefficient_matrix[k] -= factor * coefficient_matrix[j]
-            constants[k] -= factor * constants[j]
-            iteration_count += 1
+    n = len(A)
+    for i in range(n):
+        max_row = i
+        for k in range(i + 1, n):
+            if abs(A[k][i]) > abs(A[max_row][i]):
+                max_row = k
+            iterations += 1
+        A[i], A[max_row] = A[max_row], A[i]
+        b[i], b[max_row] = b[max_row], b[i]
 
-    # Backward substitution
-    for j in range(n - 1, -1, -1):
-        x[j] = (
-            constants[j] - np.dot(coefficient_matrix[j][j + 1 : n], x[j + 1 : n])
-        ) / coefficient_matrix[j][j]
-        iteration_count += 1
+        pivot = A[i][i]
+        for k in range(i, n):
+            A[i][k] /= pivot
+            iterations += 1
+        b[i] /= pivot
 
-    return x, iteration_count
+        for k in range(n):
+            if k != i:
+                factor = A[k][i]
+                for j in range(i, n):
+                    A[k][j] -= factor * A[i][j]
+                    iterations += 1
+                b[k] -= factor * b[i]
+
+        for i in range(n):
+            for j in range(n):
+                A[i][j] = round(A[i][j], 3)
+                iterations += 1
+            b[i] = round(b[i], 3)
+
+    return b, iterations
 
 
 @timeout(
@@ -107,7 +117,7 @@ def gaussian_elimination_method(coefficient_matrix: str, constants: str):
 
         # Return the results
         return {
-            "roots": roots.tolist(),
+            "roots": roots,
             "iterations": iterations,
             "execution_time_ms": execution_time_ms,
         }
