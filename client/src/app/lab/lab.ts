@@ -7,6 +7,9 @@ import { LeastSquaresMethodComponent } from '@lab/systems-of-linear/least-square
 import { FixedPointIterationSystemMethodComponent } from '@lab/systems-of-linear/fixed-point-iteration-system-method/fixed-point-iteration-system-method.component';
 import { NewtonsInterpolationMethodComponent } from '@lab/interpolation/newtons-interpolation-method/newtons-interpolation-method.component';
 import { LagrangesInterpolationMethodComponent } from '@lab/interpolation/lagranges-interpolation-method/lagranges-interpolation-method.component';
+import { RectanglesRuleComponent } from '@lab/integration/rectangles-rule/rectangles-rule.component';
+import { TrapezoidalRuleComponent } from '@lab/integration/trapezoidal-rule/trapezoidal-rule.component';
+import { SimpsonsRuleComponent } from '@lab/integration/simpsons-rule/simpsons-rule.component';
 
 export interface Lab {
   name: string;
@@ -25,6 +28,7 @@ export enum LabType {
   NonLinearEquation = 'Non-Linear Equation',
   SystemOfLinearEquations = 'System of Linear Equations',
   Interpolation = 'Interpolation',
+  Integration = 'Integration',
 }
 
 export interface LabGroup {
@@ -36,6 +40,7 @@ export const LABS_GROUPS_ORDER: LabType[] = [
   LabType.NonLinearEquation,
   LabType.SystemOfLinearEquations,
   LabType.Interpolation,
+  LabType.Integration,
 ];
 
 export const LABS: Lab[] = [
@@ -102,5 +107,29 @@ export const LABS: Lab[] = [
     apiUrl: 'lagranges_interpolation_method',
     type: LabType.Interpolation,
     component: LagrangesInterpolationMethodComponent,
+  },
+  {
+    name: 'Rectangles Rule',
+    description: 'Calculate the area under the curve using the Rectangles Rule.',
+    clientUrl: 'rectangles-rule',
+    apiUrl: 'rectangles_rule',
+    type: LabType.Integration,
+    component: RectanglesRuleComponent,
+  },
+  {
+    name: 'Trapezoidal Rule',
+    description: 'Calculate the area under the curve using the Trapezoidal Rule.',
+    clientUrl: 'trapezoidal-rule',
+    apiUrl: 'trapezoidal_rule',
+    type: LabType.Integration,
+    component: TrapezoidalRuleComponent,
+  },
+  {
+    name: "Simpson's Rule",
+    description: "Calculate the area under the curve using Simpson's Rule.",
+    clientUrl: 'simpsons-rule',
+    apiUrl: 'simpsons_rule',
+    type: LabType.Integration,
+    component: SimpsonsRuleComponent,
   },
 ];

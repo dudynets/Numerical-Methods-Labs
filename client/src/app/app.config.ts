@@ -4,6 +4,6 @@ export const APP_CONFIG = {
   calculationDelayMs: 300,
 
   // Versions
-  clientVersion: '1.1.0',
-  apiVersion: '1.1.0',
+  clientVersion: '1.2.0',
+  apiVersion: '1.2.0',
 };

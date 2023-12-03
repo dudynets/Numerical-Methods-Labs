@@ -7,6 +7,13 @@ from websockets.exceptions import ConnectionClosedOK
 
 from api.constants import CALCULATION_TIMEOUT_ERROR_MESSAGE
 from core.helpers.validate_expression import validate_expression
+from core.integration.rectangles_rule import (
+    rectangles_rule,
+    RectanglesRuleResponse,
+    RectangleRuleType,
+)
+from core.integration.simpsons_rule import SimpsonsRuleResponse, simpsons_rule
+from core.integration.trapezoidal_rule import trapezoidal_rule, TrapezoidalRuleResponse
 from core.interpolation.lagranges_interpolation_method import (
     lagranges_interpolation_method,
     LagrangesInterpolationMethodResponse,
@@ -81,7 +88,7 @@ async def __validate_expression(expression: str) -> bool:
 @app.get(
     "/newtons_method",
     name="Newtons method",
-    tags=["Functions"],
+    tags=["Non-linear"],
     summary="Computes the root of a function using Newton's method",
     description=(
         "Computes the root of a function using Newton's method.\n"
@@ -102,7 +109,7 @@ async def __newtons_method(
 @app.get(
     "/fixed_point_iteration_method",
     name="Fixed-point iteration",
-    tags=["Functions"],
+    tags=["Non-linear"],
     summary="Computes the root of a function using fixed-point iteration method",
     description=(
         "Computes the root of a function using fixed-point iteration method.\n"
@@ -123,7 +130,7 @@ async def __fixed_point_iteration(
 @app.get(
     "/secant_method",
     name="Secant method",
-    tags=["Functions"],
+    tags=["Non-linear"],
     summary="Computes the root of a function using secant method",
     description=(
         "Computes the root of a function using secant method.\n"
@@ -144,7 +151,7 @@ async def __secant_method(
 @app.get(
     "/gaussian_elimination_method",
     name="Gaussian elimination method",
-    tags=["Functions"],
+    tags=["Linear systems"],
     summary="Computes the solution of a system of linear equations using Gaussian elimination method",
     description=(
         "Computes the solution of a system of linear equations using Gaussian elimination method.\n"
@@ -164,7 +171,7 @@ async def __gaussian_elimination_method(
 @app.get(
     "/least_squares_method",
     name="Least squares method",
-    tags=["Functions"],
+    tags=["Linear systems"],
     summary="Computes the solution of a system of linear equations using least squares method",
     description=(
         "Computes the solution of a system of linear equations using least squares method.\n"
@@ -184,7 +191,7 @@ async def __least_squares_method(
 @app.get(
     "/fixed_point_iteration_system_method",
     name="Fixed-point iteration",
-    tags=["Functions"],
+    tags=["Linear systems"],
     summary="Computes the solution of a system of linear equations using fixed-point iteration method",
     description=(
         "Computes the solution of a system of linear equations using fixed-point iteration method.\n"
@@ -206,7 +213,7 @@ async def __fixed_point_iteration_system_method(
 @app.get(
     "/newtons_interpolation_method",
     name="Newton's interpolation method",
-    tags=["Functions"],
+    tags=["Interpolation"],
     summary="Interpolate a polynomial using Newton's interpolation method",
     description=(
         "Interpolate a polynomial using Newton's interpolation method.\n"
@@ -226,7 +233,7 @@ async def __newtons_interpolation_method(
 @app.get(
     "/lagranges_interpolation_method",
     name="Lagrange's interpolation method",
-    tags=["Functions"],
+    tags=["Interpolation"],
     summary="Interpolate a polynomial using Lagrange's interpolation method",
     description=(
         "Interpolate a polynomial using Lagrange's interpolation method.\n"
@@ -243,12 +250,76 @@ async def __lagranges_interpolation_method(
         raise HTTPException(status_code=400, detail=CALCULATION_TIMEOUT_ERROR_MESSAGE)
 
 
+@app.get(
+    "/rectangles_rule",
+    name="Rectangles rule",
+    tags=["Integration"],
+    summary="Find the area under the curve of a function using rectangles rule",
+    description=(
+        "Find the area under the curve of a function using rectangles rule.\n"
+        "The function must be provided in string expression format.\n"
+        "Returns the result and execution time."
+    ),
+)
+async def __rectangles_rule(
+    f_string: str,
+    a: float,
+    b: float,
+    rule_type: RectangleRuleType = RectangleRuleType.MIDDLE,
+    number_of_interval_partitions: int = 100,
+) -> RectanglesRuleResponse:
+    try:
+        return rectangles_rule(f_string, a, b, rule_type, number_of_interval_partitions)
+    except TimeoutError:
+        raise HTTPException(status_code=400, detail=CALCULATION_TIMEOUT_ERROR_MESSAGE)
+
+
+@app.get(
+    "/trapezoidal_rule",
+    name="Trapezoidal rule",
+    tags=["Integration"],
+    summary="Find the area under the curve of a function using trapezoidal rule",
+    description=(
+        "Find the area under the curve of a function using trapezoidal rule.\n"
+        "The function must be provided in string expression format.\n"
+        "Returns the result and execution time."
+    ),
+)
+async def __trapezoidal_rule(
+    f_string: str, a: float, b: float, number_of_interval_partitions: int = 100
+) -> TrapezoidalRuleResponse:
+    try:
+        return trapezoidal_rule(f_string, a, b, number_of_interval_partitions)
+    except TimeoutError:
+        raise HTTPException(status_code=400, detail=CALCULATION_TIMEOUT_ERROR_MESSAGE)
+
+
+@app.get(
+    "/simpsons_rule",
+    name="Simpson's rule",
+    tags=["Integration"],
+    summary="Find the area under the curve of a function using Simpson's rule",
+    description=(
+        "Find the area under the curve of a function using Simpson's rule.\n"
+        "The function must be provided in string expression format.\n"
+        "Returns the result and execution time."
+    ),
+)
+async def __simpsons_rule(
+    f_string: str, a: float, b: float, number_of_interval_partitions: int = 100
+) -> SimpsonsRuleResponse:
+    try:
+        return simpsons_rule(f_string, a, b, number_of_interval_partitions)
+    except TimeoutError:
+        raise HTTPException(status_code=400, detail=CALCULATION_TIMEOUT_ERROR_MESSAGE)
+
+
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
         title="Numerical Methods Labs API",
-        version="1.1.0",
+        version="1.2.0",
         summary="This project provides an API for numerical methods labs",
         description=(
             "- This project uses Python FastAPI to provide a REST API for the Numerical Methods Labs project.\n"

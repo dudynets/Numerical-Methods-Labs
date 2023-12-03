@@ -1,6 +1,7 @@
 import json
 import time
 
+import numpy as np
 from fastapi import HTTPException
 from pydantic import BaseModel
 from timeout_decorator import timeout
@@ -39,6 +40,9 @@ def gaussian_elimination_method_implementation(coefficient_matrix, constants):
     A = coefficient_matrix
     b = constants
 
+    A_temp = np.array(A, dtype=int)
+    det = np.linalg.det(A_temp)
+
     iterations = 0
 
     n = len(A)
@@ -75,6 +79,11 @@ def gaussian_elimination_method_implementation(coefficient_matrix, constants):
                 A[i][j] = round(A[i][j], 3)
                 iterations += 1
             b[i] = round(b[i], 3)
+
+    if np.abs(det) <= 1e-6:
+        raise ValueError(
+            f"Determinant is zero. The system of linear equations has infinite number of solutions. One of the solutions is {b}"
+        )
 
     return b, iterations
 

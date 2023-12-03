@@ -23,6 +23,9 @@ import { LeastSquaresMethodComponent } from '@lab/systems-of-linear/least-square
 import { FixedPointIterationSystemMethodComponent } from './systems-of-linear/fixed-point-iteration-system-method/fixed-point-iteration-system-method.component';
 import { NewtonsInterpolationMethodComponent } from './interpolation/newtons-interpolation-method/newtons-interpolation-method.component';
 import { LagrangesInterpolationMethodComponent } from '@lab/interpolation/lagranges-interpolation-method/lagranges-interpolation-method.component';
+import { RectanglesRuleComponent } from '@lab/integration/rectangles-rule/rectangles-rule.component';
+import { TrapezoidalRuleComponent } from './integration/trapezoidal-rule/trapezoidal-rule.component';
+import { SimpsonsRuleComponent } from './integration/simpsons-rule/simpsons-rule.component';
 
 const LAB_COMPONENTS = [
   NewtonsMethodComponent,
@@ -33,6 +36,9 @@ const LAB_COMPONENTS = [
   FixedPointIterationSystemMethodComponent,
   NewtonsInterpolationMethodComponent,
   LagrangesInterpolationMethodComponent,
+  RectanglesRuleComponent,
+  TrapezoidalRuleComponent,
+  SimpsonsRuleComponent,
 ];
 
 @NgModule({
